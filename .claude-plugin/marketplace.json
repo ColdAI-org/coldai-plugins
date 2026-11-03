@@ -1,0 +1,19 @@
+{
+  "name": "coldai",
+  "owner": {
+    "name": "ColdAI"
+  },
+  "description": "ColdAI's plugins for coding agents: launch your own DEX on ExClip, with ColdAI's fee of 0.875 % of the amount sold on each swap, or your own wallet with the Clip Wallet kit.",
+  "plugins": [
+    {
+      "name": "exclip",
+      "source": "./plugins/exclip",
+      "description": "Launch your own DEX on ExClip, the open-source SODAX swap front end, with ColdAI's fee. ColdAI LLC takes 0.875 % of the amount sold on every swap, paid straight to its address, except swaps with a tokenised stock on either side, which carry no fee. Your DEX charges no fee of its own. The skill states the fee and waits for your yes before it changes anything."
+    },
+    {
+      "name": "clip-wallet",
+      "source": "./plugins/clip-wallet",
+      "description": "Launch your own non-custodial wallet with the Clip Wallet kit: a browser extension, a desktop app and a phone app under your own name, ids and logo, made with create-clip-wallet. Pre-release: test networks only, and no external audit."
+    }
+  ]
+}

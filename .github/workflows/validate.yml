@@ -1,0 +1,46 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Read-only token: CI never writes to the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    name: Plugins and fee settings
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Every action is pinned to a full commit SHA.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+      # One exact version, so that a new release can't change what passes. Raise it on purpose.
+      - name: Install the Claude Code CLI
+        run: npm install --global @anthropic-ai/claude-code@2.1.301
+      - name: Validate the marketplace and each plugin
+        run: |
+          claude plugin validate .
+          for plugin in plugins/*/; do
+            claude plugin validate "./${plugin%/}"
+          done
+      # The Codex marketplace, the plugins' names in all four places, the skills' frontmatter, the fee's wording, and no
+      # fee split's terms. jq is on GitHub's Ubuntu runners.
+      - name: Check the manifests
+        run: bash scripts/check-manifests.sh
+      # Exactly the six keys: ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full
+      # ExClip commit.
+      - name: Check ColdAI's fee settings
+        run: node scripts/check-platform.mjs

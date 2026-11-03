@@ -1,0 +1,8 @@
+{
+  "$comment": "ColdAI's fee for the launch-dex skill: a plain fee rate, paid straight to one address, with no fee split. receiver is ColdAI's address on Sonic, in EIP-55 form; receiverName is the name the trade review gives it; rate is the fee per 100,000 of the amount sold (875 is 0.875 %); stockFeeBps is the fee in basis points on a swap with a tokenised stock on either side (0 is none). The skill writes receiver, receiverName and rate into ExClip's fees settings exactly as they are here, and leaves stockFeeBps at ExClip's default, 0. exclipCommit is the full ExClip commit the skill checks out. CI checks every key (scripts/check-platform.mjs). To bump exclipCommit: read that commit's AGENTS.md ('Make this my own DEX'), docs/fees.md ('A fee rate') and docs/configuration.md, change the skill wherever they changed, run the skill end to end on the new commit, then set the full commit here and add a line to CHANGELOG.md.",
+  "receiver": "0x90291104f2D1ef9Ffe2Bc1635A3a270A09C8f313",
+  "receiverName": "ColdAI",
+  "rate": 875,
+  "stockFeeBps": 0,
+  "exclipCommit": "46ff2beb0ca0c4500cff133c023e79411c0a52cc"
+}

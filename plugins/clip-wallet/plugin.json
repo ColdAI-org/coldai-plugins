@@ -1,0 +1,5 @@
+{
+  "name": "clip-wallet",
+  "version": "0.1.0",
+  "description": "Launch your own non-custodial wallet with the Clip Wallet kit: a browser extension, a desktop app and a phone app under your own name, ids and logo, made with create-clip-wallet. Pre-release: test networks only, and no external audit."
+}
