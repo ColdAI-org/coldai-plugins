@@ -18,6 +18,9 @@ All notable changes to this project are recorded here. The format follows
   rate, the fee on stock swaps (0) and the ExClip commit the skill checks out, `46ff2be`
   (`46ff2beb0ca0c4500cff133c023e79411c0a52cc`).
 - The `clip-wallet` plugin, with the skill `launch-wallet`: make your own wallet with the Clip Wallet kit's
-  `create-clip-wallet`. Pre-release: test networks only, and no external audit.
+  `create-clip-wallet`. Pre-release: test networks only, and no external audit. The skill runs `create-clip-wallet`
+  0.2.1 and no other version: it first checks on the npm registry that the package is the kit's own, built and
+  published from Clip Wallet's repository with npm provenance, and stops if it isn't. After the build, the project's
+  `pnpm verify:provenance` checks every kit package's provenance attestation.
 - CI: `claude plugin validate` for the marketplace and each plugin, the Codex marketplace's fields and paths, the
   plugins' names, and ColdAI's fee settings.

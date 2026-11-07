@@ -62,27 +62,32 @@ and languages above. An `.svg` logo needs one of these installed to be rendered:
 
 ## 3. Make the project
 
-Check that Node is 22 or newer (`node --version`). Then check that the package is the kit's own, published from
-Clip Wallet's repository:
+Check that Node is 22 or newer (`node --version`).
+
+This skill runs `create-clip-wallet` 0.2.1, exactly. Check that this version is the kit's own, built and published
+from Clip Wallet's repository with npm provenance:
 
 ```sh
-npm view create-clip-wallet name version repository.url
+npm view create-clip-wallet@0.2.1 name version repository.url dist.attestations.provenance.predicateType
 ```
 
-`repository.url` must be `git+https://github.com/ColdAI-org/clip-wallet.git`. If it isn't, or the package isn't
-found, stop and say so: don't run it. Otherwise tell the person which version will run.
+It must print `create-clip-wallet` as the name, `0.2.1` as the version,
+`git+https://github.com/ColdAI-org/clip-wallet.git` as `repository.url`, and `https://slsa.dev/provenance/v1` as the
+provenance's `predicateType`. If any of them is different or missing, or the package isn't found, stop and say so:
+don't run it. Otherwise tell the person that `create-clip-wallet` 0.2.1 will run.
 
-Then run the kit's documented command, with their values, from the directory the folder goes in:
+Then run the kit's documented command at that version, with their values, from the directory the folder goes in:
 
 ```sh
-npx create-clip-wallet <folder> --platforms <platforms> --name "<name>" --rdns <id> \
+npx create-clip-wallet@0.2.1 <folder> --platforms <platforms> --name "<name>" --rdns <id> \
   --id <id> --logo <logo> --accent "<accent>" --networks "<network families>" \
   --languages <languages> --homepage <homepage> --yes
 ```
 
 `--platforms` takes `extension`, `desktop` and `mobile`, joined by commas, and `--networks` and `--languages` take
 comma-separated lists too. Leave out an option the person gave no answer for, so the kit's default applies. Add other
-options only if the person asks for them (see the kit's documentation for `create-clip-wallet`).
+options only if the person asks for them (see the kit's documentation for `create-clip-wallet`). Never run another
+version of `create-clip-wallet`, or the command without its version.
 
 If the command refuses a value, it has written nothing. Tell the person which value and why, in the command's words,
 ask again, and run it again.
@@ -90,18 +95,24 @@ ask again, and run it again.
 ## 4. Check the project
 
 Read the new project's `AGENTS.md` and `llms.txt`, and follow them from here on. Then run the kit's loop for a
-kit-built wallet, from the project's folder (`corepack enable` first, if `pnpm` isn't installed):
+kit-built wallet, and its provenance check, from the project's folder (`corepack enable` first, if `pnpm` isn't
+installed):
 
 ```sh
 pnpm install
 pnpm harness
 pnpm check-types
 pnpm build
+pnpm verify:provenance
 ```
 
-`pnpm harness` must pass before every commit. If a check fails, fix the cause if it's in what the person gave you,
-such as the logo or the colour, and run it again. Otherwise report it with its message. If a build needs a toolchain
-this computer doesn't have, say which.
+`pnpm harness` must pass before every commit. `pnpm verify:provenance` reads each kit package's provenance
+attestation from the npm registry, and checks that Clip Wallet's CI built the package from its public repository and
+that npm serves that build.
+
+If a check fails, fix the cause if it's in what the person gave you, such as the logo or the colour, and run it
+again. Otherwise report it with its message. If a build needs a toolchain this computer doesn't have, say which. If
+`pnpm verify:provenance` fails, don't change the kit's versions to get past it.
 
 ## 5. Hand back
 
@@ -131,5 +142,5 @@ Tell the person what was made and what each check said, then give them this, wit
 >
 > **Later changes**: `pnpm wallet:identity` sets the name, ids, accent, logo, homepage or WalletConnect project id
 > again, and keeps the extension key. `pnpm wallet:brand` renders the icons again from the logo, and
-> `pnpm wallet:listings` regenerates the listing drafts. `pnpm verify:provenance` checks every kit package's
-> provenance attestation.
+> `pnpm wallet:listings` regenerates the listing drafts. After a kit upgrade, `pnpm verify:provenance` checks every
+> kit package's provenance attestation again.

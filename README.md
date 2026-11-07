@@ -95,8 +95,12 @@ Wallet kit's starter:
 1. It says that Clip Wallet is pre-release, runs on test networks only and has had no external audit.
 2. It asks for the wallet's name, reverse-DNS id, logo, accent colour and platforms (browser extension, desktop app,
    phone app), the network families you pick, the languages and the homepage.
-3. It runs the kit's documented `npx create-clip-wallet … --yes`, then the new project's checks.
-4. It points to each platform's dev command, and to what's left before shipping.
+3. It checks on the npm registry that `create-clip-wallet` 0.2.1 is the kit's own package, built and published from
+   Clip Wallet's repository with npm provenance, then runs the kit's documented
+   `npx create-clip-wallet@0.2.1 … --yes`. It runs no other version.
+4. It runs the new project's checks, then `pnpm verify:provenance`, which checks every kit package's provenance
+   attestation.
+5. It points to each platform's dev command, and to what's left before shipping.
 
 ## Maintaining
 
