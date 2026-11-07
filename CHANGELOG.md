@@ -28,5 +28,8 @@ All notable changes to this project are recorded here. The format follows
   `plugin.json` follows the portable Agent Plugins schema, with OpenAI's listing under
   `extensions."com.openai".interface`. `PRIVACY.md` is the plugins' privacy policy: they send nothing to ColdAI and
   collect no data.
-- CI: `claude plugin validate` for the marketplace and each plugin, the Codex marketplace's fields and paths, the
-  plugins' names, and ColdAI's fee settings.
+- `scripts/pack-openai.sh`, which packs each committed plugin as one ZIP for OpenAI's plugin directory, in `dist/`,
+  and checks what each ZIP holds.
+- CI: `claude plugin validate` for the marketplace, and with `--strict` for each plugin; the Codex marketplace's
+  fields and paths; the plugins' names; ColdAI's fee settings, and the fee's fixed words in the skill, the `exclip`
+  README and its OpenAI listing; and each plugin's directory listing (`scripts/check-listing.mjs`).

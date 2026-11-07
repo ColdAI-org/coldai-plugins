@@ -30,17 +30,23 @@ jobs:
       # One exact version, so that a new release can't change what passes. Raise it on purpose.
       - name: Install the Claude Code CLI
         run: npm install --global @anthropic-ai/claude-code@2.1.301
+      # Each plugin with --strict, so that a warning fails the run too.
       - name: Validate the marketplace and each plugin
         run: |
           claude plugin validate .
           for plugin in plugins/*/; do
-            claude plugin validate "./${plugin%/}"
+            claude plugin validate --strict "./${plugin%/}"
           done
-      # The Codex marketplace, the plugins' names in all four places, the skills' frontmatter, the fee's wording, and no
-      # fee split's terms. jq is on GitHub's Ubuntu runners.
+      # The Codex marketplace, the plugins' names in all four places, the skills' frontmatter, the fee's wording in the
+      # skill, the exclip README and its OpenAI listing, and no fee split's terms. jq is on GitHub's Ubuntu runners.
       - name: Check the manifests
         run: bash scripts/check-manifests.sh
       # Exactly the six keys: ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full
       # ExClip commit.
       - name: Check ColdAI's fee settings
         run: node scripts/check-platform.mjs
+      # Each plugin's listing for Anthropic's and OpenAI's directories: plugin.json against the portable schema and
+      # OpenAI's limits, the brand colour, the icons, READMEs and licences, the files under plugins/, and pinned package
+      # launchers.
+      - name: Check the directory listings
+        run: node scripts/check-listing.mjs

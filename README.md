@@ -118,6 +118,11 @@ Both plugins send nothing to ColdAI and collect no data; [PRIVACY.md](PRIVACY.md
 For Anthropic's directory (claude.ai/directory/manage), submit a plugin bundle from this repository with the paths
 `plugins/exclip` and `plugins/clip-wallet`.
 
+For OpenAI's directory, which ChatGPT and Codex share, commit first, then run
+[`bash scripts/pack-openai.sh`](scripts/pack-openai.sh). It packs each committed plugin folder as
+`dist/<name>-<version>.zip`, with `plugin.json` at the ZIP's root, lists each ZIP, and checks that it holds
+`plugin.json`, `skills/`, the icon, the README and the licence. Submit one ZIP per plugin.
+
 ## Maintaining
 
 ```text
@@ -131,7 +136,7 @@ plugins/<name>/LICENSE              a copy of LICENSE, for each plugin on its ow
 plugins/<name>/assets/              each plugin's icon
 plugins/exclip/platform.json        ColdAI's fee settings and the ExClip commit
 PRIVACY.md                          the plugins' privacy policy
-scripts/                            the checks CI runs
+scripts/                            the checks CI runs, and the OpenAI packer
 ```
 
 A plugin's name is the same in all four places: both marketplaces and both of its manifests. Both manifests have the
@@ -154,16 +159,26 @@ copy of the root `LICENSE`, byte for byte.
 [`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs on every push to `main` and every pull
 request:
 
-- `claude plugin validate` on the marketplace and on each plugin, with the Claude Code CLI pinned to one version;
+- `claude plugin validate` on the marketplace, and `claude plugin validate --strict` on each plugin, with the Claude
+  Code CLI pinned to one version;
 - [`scripts/check-manifests.sh`](scripts/check-manifests.sh): the Codex marketplace's fields and paths, that each
   plugin's name agrees in both marketplaces and both manifests, each skill's frontmatter, that the `exclip` plugin
-  states ColdAI's fee wherever it describes itself and in the skill's fixed words, and that no description,
-  `launch-dex`'s skill or this README describes a fee split;
+  states ColdAI's fee wherever it describes itself and in the fee's fixed words in its skill, its README and its
+  OpenAI listing, and that no description, listing text, `launch-dex`'s skill, README or `PRIVACY.md` describes a fee
+  split;
 - [`scripts/check-platform.mjs`](scripts/check-platform.mjs): that `platform.json` has exactly its six keys, with
-  ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full ExClip commit.
+  ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full ExClip commit;
+- [`scripts/check-listing.mjs`](scripts/check-listing.mjs): each plugin's directory listing. Its `plugin.json` has the
+  portable schema's keys, OpenAI's listing within its limits, three different example prompts, `https://` links and
+  a brand colour with at least 2:1 contrast against white, and the same shared fields and display name as its
+  `.claude-plugin/plugin.json`. Its icon is a square SVG of at least 48 px. Its README has at least 40 words, the
+  listing's prompts first under "Example prompts", the support and privacy links, and the icon only as a Markdown
+  image. Its `LICENSE` is the root's. No file under `plugins/` is a link or a system file, images are SVG or PNG,
+  other files are under 256 KiB, and every package launcher names one exact version.
 
-Locally: `claude plugin validate .`, `bash scripts/check-manifests.sh` (needs `jq`) and
-`node scripts/check-platform.mjs`.
+Locally: `claude plugin validate .`, `claude plugin validate --strict ./plugins/<name>`,
+`bash scripts/check-manifests.sh` (needs `jq`), `node scripts/check-platform.mjs` and
+`node scripts/check-listing.mjs`.
 
 ## Security
 

@@ -1,0 +1,2 @@
+# scripts/pack-openai.sh writes the directory ZIPs here.
+dist/
