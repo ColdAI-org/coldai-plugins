@@ -102,20 +102,42 @@ Wallet kit's starter:
    attestation.
 5. It points to each platform's dev command, and to what's left before shipping.
 
+## Directory listings
+
+Each plugin folder holds what Anthropic's and OpenAI's plugin directories ask for, next to its skills:
+
+- a README for the plugin's page: what it does and needs, what it runs, fetches and sends, example prompts, support,
+  privacy and licence ([exclip](plugins/exclip/README.md), [clip-wallet](plugins/clip-wallet/README.md));
+- `LICENSE`, a copy of this repository's licence, and the plugin's icon, in `assets/`;
+- `.claude-plugin/plugin.json`, the manifest for Claude Code and Anthropic's directory, and `plugin.json`, the portable
+  Agent Plugins manifest for Codex and OpenAI's directory, with OpenAI's listing under
+  `extensions."com.openai".interface`.
+
+Both plugins send nothing to ColdAI and collect no data; [PRIVACY.md](PRIVACY.md) is their privacy policy.
+
+For Anthropic's directory (claude.ai/directory/manage), submit a plugin bundle from this repository with the paths
+`plugins/exclip` and `plugins/clip-wallet`.
+
 ## Maintaining
 
 ```text
 .claude-plugin/marketplace.json     the marketplace, for Claude Code
 .agents/plugins/marketplace.json    the marketplace, for Codex
-plugins/<name>/.claude-plugin/plugin.json   each plugin's manifest, for Claude Code
-plugins/<name>/plugin.json          each plugin's manifest, for Codex
+plugins/<name>/.claude-plugin/plugin.json   each plugin's manifest, for Claude Code and Anthropic's plugin directory
+plugins/<name>/plugin.json          each plugin's manifest, for Codex and OpenAI's plugin directory
 plugins/<name>/skills/<skill>/SKILL.md      the skills, for both
+plugins/<name>/README.md            each plugin's page in the directories
+plugins/<name>/LICENSE              a copy of LICENSE, for each plugin on its own
+plugins/<name>/assets/              each plugin's icon
 plugins/exclip/platform.json        ColdAI's fee settings and the ExClip commit
+PRIVACY.md                          the plugins' privacy policy
 scripts/                            the checks CI runs
 ```
 
-A plugin's name is the same in all four places: both marketplaces and both of its manifests. Its version is in both
-manifests.
+A plugin's name is the same in all four places: both marketplaces and both of its manifests. Both manifests have the
+same version, description, author, homepage, repository, licence and keywords, and the same display name:
+`displayName` in `.claude-plugin/plugin.json`, and in OpenAI's listing in `plugin.json`. A plugin's `LICENSE` is a
+copy of the root `LICENSE`, byte for byte.
 
 ### Bump the ExClip commit
 
@@ -149,4 +171,5 @@ Report a vulnerability privately, as [SECURITY.md](SECURITY.md) says.
 
 ## Licence
 
-These plugins are licensed under the [Apache License 2.0](LICENSE), © 2026 ColdAI LLC.
+These plugins are licensed under the [Apache License 2.0](LICENSE), © 2026 ColdAI LLC. "ExClip", "Clip Wallet" and
+their marks are ColdAI trademarks and aren't licensed under it: section 6 of the licence grants no trademark rights.

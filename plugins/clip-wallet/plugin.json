@@ -1,5 +1,38 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "clip-wallet",
   "version": "0.1.0",
-  "description": "Launch your own non-custodial wallet with the Clip Wallet kit: a browser extension, a desktop app and a phone app under your own name, ids and logo, made with create-clip-wallet. Pre-release: test networks only, and no external audit."
+  "description": "Launch your own non-custodial wallet with the Clip Wallet kit: a browser extension, a desktop app and a phone app under your own name, ids and logo, made with create-clip-wallet. Pre-release: test networks only, and no external audit.",
+  "author": {
+    "name": "ColdAI LLC",
+    "url": "https://coldai.org"
+  },
+  "homepage": "https://github.com/ColdAI-org/clip-wallet",
+  "repository": "https://github.com/ColdAI-org/coldai-plugins",
+  "license": "Apache-2.0",
+  "keywords": ["wallet", "clip-wallet", "create-clip-wallet", "browser-extension", "desktop", "mobile"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Clip Wallet",
+        "shortDescription": "Launch your own wallet",
+        "longDescription": "Clip Wallet is a kit for non-custodial wallets. This plugin's skill, launch-wallet, makes a new wallet project with the kit's starter, create-clip-wallet: a browser extension, a desktop app for macOS, Windows and Linux, and a phone app for iOS and Android, under your own name, ids, logo and accent colour, for the network families and languages you pick.\n\nPre-release: Clip Wallet runs on test networks only and has had no external audit. The wallet it makes runs on test networks, and the command has no switch for mainnet: that is your decision, as the wallet's owner.\n\nYour coding agent first checks on the npm registry that the starter is the kit's own package, built and published from Clip Wallet's repository with npm provenance, and runs it only at the exact version the skill names. Then it installs the project's packages with pnpm, runs the project's checks, and checks every kit package's provenance. It never opens the wallet's extension key, and never asks for a recovery phrase or a private key. It needs an agent that runs commands in a terminal, such as Claude Code, Codex or Cowork. In a chat without one, the skill can explain the steps but not run them.\n\nThe plugin sends nothing to ColdAI and collects no data.",
+        "developerName": "ColdAI LLC",
+        "category": "Coding",
+        "capabilities": [],
+        "websiteURL": "https://github.com/ColdAI-org/clip-wallet",
+        "supportURL": "https://coldai.org/contact",
+        "privacyPolicyURL": "https://github.com/ColdAI-org/coldai-plugins/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://coldai.org/terms",
+        "defaultPrompt": [
+          "Launch my own wallet with Clip Wallet.",
+          "Make a browser extension wallet called Acme Wallet for EVM networks and Solana, with a green accent.",
+          "Start a wallet with the Clip Wallet kit for desktop and phone, in English and German, with the id com.acme.wallet."
+        ],
+        "brandColor": "#FF3C00",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/icon.svg"
+      }
+    }
+  }
 }

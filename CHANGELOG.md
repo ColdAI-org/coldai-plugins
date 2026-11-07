@@ -22,5 +22,11 @@ All notable changes to this project are recorded here. The format follows
   0.2.1 and no other version: it first checks on the npm registry that the package is the kit's own, built and
   published from Clip Wallet's repository with npm provenance, and stops if it isn't. After the build, the project's
   `pnpm verify:provenance` checks every kit package's provenance attestation.
+- Listings for Anthropic's and OpenAI's plugin directories. Each plugin folder has a README (what the plugin does and
+  needs, what it runs, fetches and sends, example prompts, support, privacy and licence), a copy of the licence, and
+  its icon. Each `.claude-plugin/plugin.json` adds `displayName`, `homepage`, `repository` and `author.url`. Each
+  `plugin.json` follows the portable Agent Plugins schema, with OpenAI's listing under
+  `extensions."com.openai".interface`. `PRIVACY.md` is the plugins' privacy policy: they send nothing to ColdAI and
+  collect no data.
 - CI: `claude plugin validate` for the marketplace and each plugin, the Codex marketplace's fields and paths, the
   plugins' names, and ColdAI's fee settings.

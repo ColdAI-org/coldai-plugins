@@ -1,10 +1,14 @@
 {
   "name": "clip-wallet",
+  "displayName": "Clip Wallet",
   "version": "0.1.0",
   "description": "Launch your own non-custodial wallet with the Clip Wallet kit: a browser extension, a desktop app and a phone app under your own name, ids and logo, made with create-clip-wallet. Pre-release: test networks only, and no external audit.",
   "author": {
-    "name": "ColdAI LLC"
+    "name": "ColdAI LLC",
+    "url": "https://coldai.org"
   },
+  "homepage": "https://github.com/ColdAI-org/clip-wallet",
+  "repository": "https://github.com/ColdAI-org/coldai-plugins",
   "license": "Apache-2.0",
   "keywords": ["wallet", "clip-wallet", "create-clip-wallet", "browser-extension", "desktop", "mobile"]
 }

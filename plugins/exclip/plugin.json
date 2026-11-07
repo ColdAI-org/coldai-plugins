@@ -1,5 +1,38 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "exclip",
   "version": "0.1.0",
-  "description": "Launch your own DEX on ExClip, the open-source SODAX swap front end, with ColdAI's fee. ColdAI LLC takes 0.875 % of the amount sold on every swap, paid straight to its address, except swaps with a tokenised stock on either side, which carry no fee. Your DEX charges no fee of its own. The skill states the fee and waits for your yes before it changes anything."
+  "description": "Launch your own DEX on ExClip, the open-source SODAX swap front end, with ColdAI's fee. ColdAI LLC takes 0.875 % of the amount sold on every swap, paid straight to its address, except swaps with a tokenised stock on either side, which carry no fee. Your DEX charges no fee of its own. The skill states the fee and waits for your yes before it changes anything.",
+  "author": {
+    "name": "ColdAI LLC",
+    "url": "https://coldai.org"
+  },
+  "homepage": "https://coldai.org/exclip/",
+  "repository": "https://github.com/ColdAI-org/coldai-plugins",
+  "license": "Apache-2.0",
+  "keywords": ["dex", "exclip", "sodax", "swap", "fee"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "ExClip",
+        "shortDescription": "Launch your own DEX",
+        "longDescription": "ExClip is the open-source front end for SODAX cross-chain swaps. This plugin's skill, launch-dex, sets up a copy of ExClip as your own DEX, under your name, logo, colours and domains, with ColdAI's fee.\n\nColdAI's fee: 0.875 % of the amount sold on every swap, paid straight to ColdAI LLC's address. Swaps with a tokenised stock on either side carry no fee. Your DEX charges no fee of its own. This plugin sets ColdAI's fee and no other. Your traders see the fee on every swap's review, named with its rate, before they confirm.\n\nBefore it changes anything, the skill states the fee and asks: \"Do you agree to ColdAI's fee of 0.875 %? Please answer yes or no.\" Only a clear yes goes on. On a no, nothing is changed.\n\nAfter a yes, your coding agent clones ExClip from GitHub at the commit this plugin pins, installs its packages from the npm registry with pnpm, writes your settings, runs ExClip's checks, and starts ExClip on your computer to check the fee setting. Then it lists what's left before your DEX goes live. It needs an agent that runs commands in a terminal, such as Claude Code, Codex or Cowork. In a chat without one, the skill can explain the steps but not run them.\n\nNo outside party has audited ExClip or this plugin. ExClip has no test-network mode: every swap is real. The plugin sends nothing to ColdAI and collects no data.",
+        "developerName": "ColdAI LLC",
+        "category": "Coding",
+        "capabilities": [],
+        "websiteURL": "https://coldai.org/exclip/",
+        "supportURL": "https://coldai.org/contact",
+        "privacyPolicyURL": "https://github.com/ColdAI-org/coldai-plugins/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://coldai.org/terms",
+        "defaultPrompt": [
+          "Launch my own DEX on ExClip.",
+          "Set up a swap site with ExClip called Acme Swap, run by Acme Ltd, with a teal accent.",
+          "Start a DEX with ColdAI on my domains: https://swap.acme.example for the app, https://wallet.acme.example for the wallet."
+        ],
+        "brandColor": "#2563EB",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/icon.svg"
+      }
+    }
+  }
 }
