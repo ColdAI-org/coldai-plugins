@@ -51,6 +51,7 @@ plugin changes nothing unless you agree to ColdAI's fee.
 
 ## Contact
 
-Ask ColdAI about this policy at https://coldai.org/contact.
+Ask ColdAI about this policy at https://coldai.org/contact. ColdAI's privacy policy for its website and services is
+at https://coldai.org/privacy.
 
 Last changed: 2026-11-07.
