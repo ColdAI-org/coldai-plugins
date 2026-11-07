@@ -32,6 +32,17 @@ another chain, its hub asset on Sonic) to ColdAI's address on Sonic, `0x90291104
 - Your DEX's name, its operator's name, a logo file you own and a colour. If you have them, two domains (one for the
   app, one for the wallet) and the addresses of your terms of use and privacy notice.
 
+## Install
+
+In Claude Code, one line adds the marketplace and installs the plugin:
+
+```sh
+/plugin install exclip --marketplace ColdAI-org/coldai-plugins
+```
+
+From a terminal: `claude plugin install exclip --marketplace ColdAI-org/coldai-plugins`. The
+[repository's README](https://github.com/ColdAI-org/coldai-plugins#install-with-claude-code) covers Codex.
+
 ## What it runs, fetches and sends
 
 The skill tells your coding agent what to do, and the agent runs the commands on your computer. In order:

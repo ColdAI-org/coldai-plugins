@@ -24,6 +24,17 @@ mistakes: review what yours made before you build.
   `rsvg-convert`, `sips` (built into macOS) or ImageMagick's `magick`.
 - Each platform's own build tools, to build for it. The agent tells you which are missing.
 
+## Install
+
+In Claude Code, one line adds the marketplace and installs the plugin:
+
+```sh
+/plugin install clip-wallet --marketplace ColdAI-org/coldai-plugins
+```
+
+From a terminal: `claude plugin install clip-wallet --marketplace ColdAI-org/coldai-plugins`. The
+[repository's README](https://github.com/ColdAI-org/coldai-plugins#install-with-claude-code) covers Codex.
+
 ## What it runs, fetches and sends
 
 The skill tells your coding agent what to do, and the agent runs the commands on your computer. In order:
