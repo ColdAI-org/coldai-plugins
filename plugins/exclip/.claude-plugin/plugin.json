@@ -1,10 +1,14 @@
 {
   "name": "exclip",
+  "displayName": "ExClip",
   "version": "0.1.0",
   "description": "Launch your own DEX on ExClip, the open-source SODAX swap front end, with ColdAI's fee. ColdAI LLC takes 0.875 % of the amount sold on every swap, paid straight to its address, except swaps with a tokenised stock on either side, which carry no fee. Your DEX charges no fee of its own. The skill states the fee and waits for your yes before it changes anything.",
   "author": {
-    "name": "ColdAI LLC"
+    "name": "ColdAI LLC",
+    "url": "https://coldai.org"
   },
+  "homepage": "https://coldai.org/exclip/",
+  "repository": "https://github.com/ColdAI-org/coldai-plugins",
   "license": "Apache-2.0",
   "keywords": ["dex", "exclip", "sodax", "swap", "fee"]
 }

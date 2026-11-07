@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Checks what `claude plugin validate` doesn't: the Codex marketplace's fields and paths, that each plugin's name
 # agrees in both marketplaces and both of its manifests, each skill's frontmatter, that the exclip plugin states
-# ColdAI's fee wherever it describes itself, and that no description, launch-dex's skill or the README describes a fee
-# split. Needs jq. Run from anywhere: bash scripts/check-manifests.sh
+# ColdAI's fee wherever it describes itself, in the fee's fixed words in its skill, its README and its OpenAI listing,
+# and that no description, listing text, launch-dex's skill, README or PRIVACY.md describes a fee split. Needs jq. Run
+# from anywhere: bash scripts/check-manifests.sh
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -109,7 +110,8 @@ for skill in plugins/*/skills/*/SKILL.md; do
   if [ "${#description}" -gt 1024 ]; then fail "$skill" "description is longer than 1,024 characters"; fi
 done
 
-# ColdAI's fee, wherever the exclip plugin describes itself, and the skill's fixed words for it.
+# ColdAI's fee, wherever the exclip plugin describes itself, and the fixed words for it in the skill, the plugin's
+# README and its OpenAI listing.
 descriptions=(
   "$CLAUDE_MARKETPLACE" "$(jq -r '.plugins[]? | select(.name == "exclip") | .description' "$CLAUDE_MARKETPLACE")"
   plugins/exclip/.claude-plugin/plugin.json "$(jq -r '.description' plugins/exclip/.claude-plugin/plugin.json)"
@@ -120,20 +122,31 @@ for ((i = 0; i < ${#descriptions[@]}; i += 2)); do
     fail "${descriptions[i]}" "the exclip plugin's description must state ColdAI's fee, 0.875 %"
   fi
 done
-for words in \
-  "**ColdAI's fee: 0.875 % of the amount sold on every swap**" \
-  "**Your DEX charges no fee of its own.**" \
-  "**Your traders see the fee**" \
-  "Do you agree to ColdAI's fee of 0.875 %? Please answer yes or no."; do
-  if ! grep -qF -- "$words" plugins/exclip/skills/launch-dex/SKILL.md; then
-    fail plugins/exclip/skills/launch-dex/SKILL.md "the fee's fixed words are missing: $words"
+fee_words=(
+  "**ColdAI's fee: 0.875 % of the amount sold on every swap**"
+  "**Your DEX charges no fee of its own.**"
+  "**Your traders see the fee**"
+  "Do you agree to ColdAI's fee of 0.875 %? Please answer yes or no."
+)
+for file in plugins/exclip/skills/launch-dex/SKILL.md plugins/exclip/README.md; do
+  for words in "${fee_words[@]}"; do
+    if ! grep -qF -- "$words" "$file" 2> /dev/null; then
+      fail "$file" "the fee's fixed words are missing: $words"
+    fi
+  done
+done
+# OpenAI's listing is plain text, so it carries the same words without the bold.
+listing=$(jq -r '.extensions."com.openai".interface.longDescription // ""' plugins/exclip/plugin.json)
+for words in "${fee_words[@]}"; do
+  if [[ "$listing" != *"${words//\*\*/}"* ]]; then
+    fail plugins/exclip/plugin.json "interface.longDescription is missing the fee's fixed words: ${words//\*\*/}"
   fi
 done
 
 # launch-dex charges ColdAI's fee as a plain rate, so a fee split's terms appear nowhere that describes it: not in its
-# skill, not in the README, and not in any plugin's or marketplace's description.
+# skill, not in a README or PRIVACY.md, and not in any plugin's or marketplace's description or listing text.
 split_terms=("1.875" "operatorRate" "FeeSplitterFactory")
-for file in plugins/exclip/skills/launch-dex/SKILL.md README.md; do
+for file in plugins/exclip/skills/launch-dex/SKILL.md README.md plugins/*/README.md PRIVACY.md; do
   for words in "${split_terms[@]}"; do
     if grep -qF -- "$words" "$file"; then
       fail "$file" "mentions $words, a fee split's term: launch-dex charges ColdAI's fee as a plain rate"
@@ -141,13 +154,14 @@ for file in plugins/exclip/skills/launch-dex/SKILL.md README.md; do
   done
 done
 for file in "$CLAUDE_MARKETPLACE" "$CODEX_MARKETPLACE" plugins/*/.claude-plugin/plugin.json plugins/*/plugin.json; do
-  text=$(jq -r '[.. | objects | .description? | strings] | join("\n")' "$file")
+  text=$(jq -r '[.. | objects | (.description?, .shortDescription?, .longDescription?, .defaultPrompt[]?) | strings]
+    | join("\n")' "$file")
   for words in "${split_terms[@]}"; do
     if [[ "$text" == *"$words"* ]]; then
-      fail "$file" "a description mentions $words, a fee split's term: launch-dex charges ColdAI's fee as a plain rate"
+      fail "$file" "a description or listing text mentions $words, a fee split's term: launch-dex charges ColdAI's fee as a plain rate"
     fi
   done
 done
 
 if [ "$failed" -ne 0 ]; then exit 1; fi
-echo "Manifests: $(echo $folders) agree in both marketplaces and both manifests; skill frontmatter and fee wording in place; no fee split's terms."
+echo "Manifests: $(echo $folders) agree in both marketplaces and both manifests; skill frontmatter and fee wording in place, in the skill, the exclip README and its OpenAI listing; no fee split's terms."

@@ -18,6 +18,18 @@ All notable changes to this project are recorded here. The format follows
   rate, the fee on stock swaps (0) and the ExClip commit the skill checks out, `46ff2be`
   (`46ff2beb0ca0c4500cff133c023e79411c0a52cc`).
 - The `clip-wallet` plugin, with the skill `launch-wallet`: make your own wallet with the Clip Wallet kit's
-  `create-clip-wallet`. Pre-release: test networks only, and no external audit.
-- CI: `claude plugin validate` for the marketplace and each plugin, the Codex marketplace's fields and paths, the
-  plugins' names, and ColdAI's fee settings.
+  `create-clip-wallet`. Pre-release: test networks only, and no external audit. The skill runs `create-clip-wallet`
+  0.2.1 and no other version: it first checks on the npm registry that the package is the kit's own, built and
+  published from Clip Wallet's repository with npm provenance, and stops if it isn't. After the build, the project's
+  `pnpm verify:provenance` checks every kit package's provenance attestation.
+- Listings for Anthropic's and OpenAI's plugin directories. Each plugin folder has a README (what the plugin does and
+  needs, what it runs, fetches and sends, example prompts, support, privacy and licence), a copy of the licence, and
+  its icon. Each `.claude-plugin/plugin.json` adds `displayName`, `homepage`, `repository` and `author.url`. Each
+  `plugin.json` follows the portable Agent Plugins schema, with OpenAI's listing under
+  `extensions."com.openai".interface`. `PRIVACY.md` is the plugins' privacy policy: they send nothing to ColdAI and
+  collect no data.
+- `scripts/pack-openai.sh`, which packs each committed plugin as one ZIP for OpenAI's plugin directory, in `dist/`,
+  and checks what each ZIP holds.
+- CI: `claude plugin validate` for the marketplace, and with `--strict` for each plugin; the Codex marketplace's
+  fields and paths; the plugins' names; ColdAI's fee settings, and the fee's fixed words in the skill, the `exclip`
+  README and its OpenAI listing; and each plugin's directory listing (`scripts/check-listing.mjs`).

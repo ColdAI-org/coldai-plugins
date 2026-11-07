@@ -95,23 +95,54 @@ Wallet kit's starter:
 1. It says that Clip Wallet is pre-release, runs on test networks only and has had no external audit.
 2. It asks for the wallet's name, reverse-DNS id, logo, accent colour and platforms (browser extension, desktop app,
    phone app), the network families you pick, the languages and the homepage.
-3. It runs the kit's documented `npx create-clip-wallet … --yes`, then the new project's checks.
-4. It points to each platform's dev command, and to what's left before shipping.
+3. It checks on the npm registry that `create-clip-wallet` 0.2.1 is the kit's own package, built and published from
+   Clip Wallet's repository with npm provenance, then runs the kit's documented
+   `npx create-clip-wallet@0.2.1 … --yes`. It runs no other version.
+4. It runs the new project's checks, then `pnpm verify:provenance`, which checks every kit package's provenance
+   attestation.
+5. It points to each platform's dev command, and to what's left before shipping.
+
+## Directory listings
+
+Each plugin folder holds what Anthropic's and OpenAI's plugin directories ask for, next to its skills:
+
+- a README for the plugin's page: what it does and needs, what it runs, fetches and sends, example prompts, support,
+  privacy and licence ([exclip](plugins/exclip/README.md), [clip-wallet](plugins/clip-wallet/README.md));
+- `LICENSE`, a copy of this repository's licence, and the plugin's icon, in `assets/`;
+- `.claude-plugin/plugin.json`, the manifest for Claude Code and Anthropic's directory, and `plugin.json`, the portable
+  Agent Plugins manifest for Codex and OpenAI's directory, with OpenAI's listing under
+  `extensions."com.openai".interface`.
+
+Both plugins send nothing to ColdAI and collect no data; [PRIVACY.md](PRIVACY.md) is their privacy policy.
+
+For Anthropic's directory (claude.ai/directory/manage), submit a plugin bundle from this repository with the paths
+`plugins/exclip` and `plugins/clip-wallet`.
+
+For OpenAI's directory, which ChatGPT and Codex share, commit first, then run
+[`bash scripts/pack-openai.sh`](scripts/pack-openai.sh). It packs each committed plugin folder as
+`dist/<name>-<version>.zip`, with `plugin.json` at the ZIP's root, lists each ZIP, and checks that it holds
+`plugin.json`, `skills/`, the icon, the README and the licence. Submit one ZIP per plugin.
 
 ## Maintaining
 
 ```text
 .claude-plugin/marketplace.json     the marketplace, for Claude Code
 .agents/plugins/marketplace.json    the marketplace, for Codex
-plugins/<name>/.claude-plugin/plugin.json   each plugin's manifest, for Claude Code
-plugins/<name>/plugin.json          each plugin's manifest, for Codex
+plugins/<name>/.claude-plugin/plugin.json   each plugin's manifest, for Claude Code and Anthropic's plugin directory
+plugins/<name>/plugin.json          each plugin's manifest, for Codex and OpenAI's plugin directory
 plugins/<name>/skills/<skill>/SKILL.md      the skills, for both
+plugins/<name>/README.md            each plugin's page in the directories
+plugins/<name>/LICENSE              a copy of LICENSE, for each plugin on its own
+plugins/<name>/assets/              each plugin's icon
 plugins/exclip/platform.json        ColdAI's fee settings and the ExClip commit
-scripts/                            the checks CI runs
+PRIVACY.md                          the plugins' privacy policy
+scripts/                            the checks CI runs, and the OpenAI packer
 ```
 
-A plugin's name is the same in all four places: both marketplaces and both of its manifests. Its version is in both
-manifests.
+A plugin's name is the same in all four places: both marketplaces and both of its manifests. Both manifests have the
+same version, description, author, homepage, repository, licence and keywords, and the same display name:
+`displayName` in `.claude-plugin/plugin.json`, and in OpenAI's listing in `plugin.json`. A plugin's `LICENSE` is a
+copy of the root `LICENSE`, byte for byte.
 
 ### Bump the ExClip commit
 
@@ -128,16 +159,26 @@ manifests.
 [`.github/workflows/validate.yml`](.github/workflows/validate.yml) runs on every push to `main` and every pull
 request:
 
-- `claude plugin validate` on the marketplace and on each plugin, with the Claude Code CLI pinned to one version;
+- `claude plugin validate` on the marketplace, and `claude plugin validate --strict` on each plugin, with the Claude
+  Code CLI pinned to one version;
 - [`scripts/check-manifests.sh`](scripts/check-manifests.sh): the Codex marketplace's fields and paths, that each
   plugin's name agrees in both marketplaces and both manifests, each skill's frontmatter, that the `exclip` plugin
-  states ColdAI's fee wherever it describes itself and in the skill's fixed words, and that no description,
-  `launch-dex`'s skill or this README describes a fee split;
+  states ColdAI's fee wherever it describes itself and in the fee's fixed words in its skill, its README and its
+  OpenAI listing, and that no description, listing text, `launch-dex`'s skill, README or `PRIVACY.md` describes a fee
+  split;
 - [`scripts/check-platform.mjs`](scripts/check-platform.mjs): that `platform.json` has exactly its six keys, with
-  ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full ExClip commit.
+  ColdAI's address in EIP-55 form, its name, the rate 875, no fee on stock swaps, and a full ExClip commit;
+- [`scripts/check-listing.mjs`](scripts/check-listing.mjs): each plugin's directory listing. Its `plugin.json` has the
+  portable schema's keys, OpenAI's listing within its limits, three different example prompts, `https://` links and
+  a brand colour with at least 2:1 contrast against white, and the same shared fields and display name as its
+  `.claude-plugin/plugin.json`. Its icon is a square SVG of at least 48 px. Its README has at least 40 words, the
+  listing's prompts first under "Example prompts", the support and privacy links, and the icon only as a Markdown
+  image. Its `LICENSE` is the root's. No file under `plugins/` is a link or a system file, images are SVG or PNG,
+  other files are under 256 KiB, and every package launcher names one exact version.
 
-Locally: `claude plugin validate .`, `bash scripts/check-manifests.sh` (needs `jq`) and
-`node scripts/check-platform.mjs`.
+Locally: `claude plugin validate .`, `claude plugin validate --strict ./plugins/<name>`,
+`bash scripts/check-manifests.sh` (needs `jq`), `node scripts/check-platform.mjs` and
+`node scripts/check-listing.mjs`.
 
 ## Security
 
@@ -145,4 +186,5 @@ Report a vulnerability privately, as [SECURITY.md](SECURITY.md) says.
 
 ## Licence
 
-These plugins are licensed under the [Apache License 2.0](LICENSE), © 2026 ColdAI LLC.
+These plugins are licensed under the [Apache License 2.0](LICENSE), © 2026 ColdAI LLC. "ExClip", "Clip Wallet" and
+their marks are ColdAI trademarks and aren't licensed under it: section 6 of the licence grants no trademark rights.
